@@ -5,6 +5,8 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Urbanist, Poppins } from "next/font/google";
 import { RoleProvider } from "@/components/role-context";
+import { SiteHeader } from "@/components/site-header";
+
 
 export const metadata: Metadata = {
   title: "VeCarbon Market",
@@ -36,7 +38,10 @@ export default function RootLayout({
     >
       <body className="font-sans">
         <RoleProvider>
-          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            <SiteHeader />
+            {children}
+          </Suspense>
         </RoleProvider>
         <Analytics />
       </body>

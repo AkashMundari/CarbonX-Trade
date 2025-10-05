@@ -15,7 +15,7 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
   useEffect(() => {
     try {
       setUserProjects(JSON.parse(localStorage.getItem("userProjects") || "[]"))
-    } catch {}
+    } catch { }
   }, [])
   const projects = useMemo(() => [...userProjects, ...base], [userProjects])
   const project = projects.find((p) => p.id === params.id)
@@ -23,7 +23,6 @@ export default function ProjectDetail({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-dvh flex flex-col">
-      <SiteHeader />
       <main className="flex-1">
         <section className="px-6 md:px-10 lg:px-16 py-10">
           <div className="max-w-6xl mx-auto grid gap-8 lg:grid-cols-2">

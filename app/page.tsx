@@ -3,14 +3,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MarketplacePreview } from "@/components/marketplace/marketplace-preview";
 import { FeatureList } from "@/components/sections/feature-list";
-import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { RoleChooser } from "@/components/home/role-chooser";
 
 export default function HomePage() {
   return (
     <div className="min-h-dvh flex flex-col bg-background">
-      <SiteHeader />
       <main className="flex-1">
         {/* Hero */}
         <section className="px-6 md:px-10 lg:px-16 py-12 md:py-20">

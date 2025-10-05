@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -16,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { submitActivity } from "@/lib/contract"; // <-- blockchain integration
 
 export default function ListProjectPage() {
   const router = useRouter();
@@ -30,6 +30,8 @@ export default function ListProjectPage() {
     description: "",
   });
   const [preview, setPreview] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -49,32 +51,46 @@ export default function ListProjectPage() {
     fr.readAsDataURL(file);
   };
 
-  const save = () => {
-    const newProject = {
-      id: `${Date.now()}`,
-      name: form.name,
-      location: form.location,
-      category: form.category,
-      methodology: form.methodology,
-      price: Number(form.price || 0),
-      available: Number(form.available || 0),
-      image: form.image || "/placeholder.jpg",
-      description: form.description,
-    };
+  const save = async () => {
+    setLoading(true);
+    setError("");
     try {
+      // 🔹 Use available tCO₂e as the "reduction" input (each ton = 1000 kg)
+      const reduction = Number(form.available || 0) * 1000;
+      const description = `${form.name} - ${form.description || "No description"} (${form.location}, ${form.category}, ${form.methodology})`;
+
+      const tx = await submitActivity(description, reduction);
+      console.log("Submitted activity:", tx);
+
+      // 🔹 Save locally for UI (optional)
+      const newProject = {
+        id: `${Date.now()}`,
+        name: form.name,
+        location: form.location,
+        category: form.category,
+        methodology: form.methodology,
+        price: Number(form.price || 0),
+        available: Number(form.available || 0),
+        image: form.image || "/placeholder.jpg",
+        description: form.description,
+      };
       const key = "userProjects";
       const existing = JSON.parse(localStorage.getItem(key) || "[]");
       existing.push(newProject);
       localStorage.setItem(key, JSON.stringify(existing));
-    } catch (e) {
-      console.log("[v0] Failed to save project", e);
+
+      alert("Project listed on blockchain ✅");
+      router.push("/marketplace");
+    } catch (e: any) {
+      console.error(e);
+      setError(e.message || "Failed to submit project");
+    } finally {
+      setLoading(false);
     }
-    router.push("/marketplace");
   };
 
   return (
     <div className="min-h-dvh flex flex-col">
-      <SiteHeader />
       <main className="flex-1 px-6 md:px-10 lg:px-16 py-10">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-semibold font-display">
@@ -150,7 +166,6 @@ export default function ListProjectPage() {
               />
             </div>
 
-            {/* Image upload + optional URL fallback */}
             <div className="grid gap-2">
               <label className="text-sm font-medium">Project image</label>
               <div className="flex flex-col gap-2 md:flex-row md:items-center">
@@ -185,12 +200,15 @@ export default function ListProjectPage() {
               value={form.description}
               onChange={onChange}
             />
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
             <div className="flex items-center gap-3 pt-2">
               <Button
                 onClick={save}
+                disabled={loading}
                 className="bg-primary text-primary-foreground hover:opacity-90"
               >
-                List Project
+                {loading ? "Submitting..." : "List Project"}
               </Button>
               <Button variant="outline" onClick={() => router.back()}>
                 Cancel
