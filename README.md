@@ -26,7 +26,7 @@ CarbonX-Trade transforms traditional carbon markets into a **verified, accessibl
 
 ### Frontend
 - **Framework**: Next.js with TypeScript
-- **UI Library**: Radix UI components with Tailwind CSS
+- **UI**: Tailwind CSS
 
 ### Blockchain & Web3
 - **Blockchain**: VeChain Testnet
@@ -69,62 +69,6 @@ akashmundari-carbonx-trade/
 ├── lib/                         # Utility libraries
 └── styles/                      # Global styles
 ```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- pnpm package manager
-- VeWorld wallet (for testing)
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/akashmundari/carbonx-trade.git
-cd carbonx-trade
-```
-
-2. **Install dependencies**
-```bash
-pnpm install
-```
-
-3. **Environment Setup**
-Create a `.env.local` file:
-```env
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_walletconnect_project_id
-```
-
-4. **Run development server**
-```bash
-pnpm dev
-```
-
-5. **Open in browser**
-Navigate to `http://localhost:3000`
-
-## 📄 Smart Contract Deployment
-
-### VeChain Testnet Deployment
-
-1. **Configure deployment parameters**
-```javascript
-const X2EARNREWARDSPOOL = "0x5F8f86B8D0Fa93cdaE20936d150175dF0205fB38"
-const APPID = "your_vebetterdao_app_id"
-```
-
-2. **Deploy contract**
-```bash
-cd contractutils
-npx hardhat run scripts/deploy.js --network vechain-testnet
-```
-
-3. **Post-deployment steps**
-- Register app on VeBetterDAO testnet
-- Add contract as Reward Distributor
-- Fund contract with B3TR tokens
-- Update frontend with contract address
 
 ## 💡 Key Features
 
